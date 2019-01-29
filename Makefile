@@ -9,4 +9,4 @@ all: $(patsubst %.js,%.min.js,$(filter-out %.min.js,$(wildcard *.js)))
 	yui-compressor $< -o $@
 
 test:
-	./node_modules/.bin/jshint *jquery.flot.js
+	./node_modules/.bin/jshint jquery.flot*.js
