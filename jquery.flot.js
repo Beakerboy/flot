@@ -583,6 +583,9 @@ Licensed under the MIT license.
 	//     Angle is currently unused, it will be implemented in the future.
 
 	Canvas.prototype.removeText = function(layer, x, y, text, font, angle) {
+		var positions;
+		var i;
+		var position;
 		if (text === null) {
 			var layerCache = this._textCache[layer];
 			if (layerCache !== null) {
@@ -591,8 +594,9 @@ Licensed under the MIT license.
 						var styleCache = layerCache[styleKey];
 						for (var key in styleCache) {
 							if (hasOwnProperty.call(styleCache, key)) {
-								var positions = styleCache[key].positions;
-								for (var i = 0, position; position = positions[i]; i++) {
+								positions = styleCache[key].positions;
+								for (i = 0; positions[i]; i++) {
+									position = positions[i];
 									position.active = false;
 								}
 							}
@@ -601,8 +605,9 @@ Licensed under the MIT license.
 				}
 			}
 		} else {
-			var positions = this.getTextInfo(layer, text, font, angle).positions;
-			for (var i = 0, position; position = positions[i]; i++) {
+			positions = this.getTextInfo(layer, text, font, angle).positions;
+			for (i = 0; positions[i]; i++) {
+				position = positions[i];
 				if (position.x == x && position.y == y) {
 					position.active = false;
 				}
