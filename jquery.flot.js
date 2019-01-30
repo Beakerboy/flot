@@ -315,7 +315,8 @@ Licensed under the MIT license.
 
 								var positions = styleCache[key].positions;
 
-								for (var i = 0, position; position = positions[i]; i++) {
+								for (var i = 0, position; positions[i]; i++) {
+									position = positions[i];
 									if (position.active) {
 										if (!position.rendered) {
 											layer.append(position.element);
@@ -535,7 +536,8 @@ Licensed under the MIT license.
 		// Determine whether this text already exists at this position.
 		// If so, mark it for inclusion in the next render pass.
 
-		for (var i = 0, position; position = positions[i]; i++) {
+		for (var i = 0, position; positions[i]; i++) {
+			position = positions[i];
 			if (position.x == x && position.y == y) {
 				position.active = true;
 				return;
