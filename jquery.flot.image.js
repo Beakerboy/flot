@@ -94,12 +94,11 @@ Google Maps).
 
             callback();
         });
-    }
+    };
     
     $.plot.image.load = function (urls, callback) {
         var missing = urls.length, loaded = {};
-        if (missing == 0)
-            callback({});
+        if (missing == 0) callback({});
 
         $.each(urls, function (i, url) {
             var handler = function () {
@@ -107,8 +106,7 @@ Google Maps).
                 
                 loaded[url] = this;
                 
-                if (missing == 0)
-                    callback(loaded);
+                if (missing == 0) callback(loaded);
             };
 
             $('<img />').load(handler).error(handler).attr('src', url);
