@@ -90,7 +90,7 @@ Licensed under the MIT license.
 		if(res)return m(parseFloat(res[1])*2.55,parseFloat(res[2])*2.55,parseFloat(res[3])*2.55,parseFloat(res[4]));
 		res=/#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(str);
 		if(res)return m(parseInt(res[1],16),parseInt(res[2],16),parseInt(res[3],16));
-		res=/#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(str)
+		res=/#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(str);
 		if(res)return m(parseInt(res[1]+res[1],16),parseInt(res[2]+res[2],16),parseInt(res[3]+res[3],16));
 		var name=$.trim(str).toLowerCase();
 		if(name=="transparent")return m(255,255,255,0);
