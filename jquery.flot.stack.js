@@ -154,7 +154,7 @@ charts or filled areas).
                         newpoints[l + accumulateOffset] += bottom;
                         
                         i += ps;
-                    }
+                    };
 
                     fromgap = false;
                     
