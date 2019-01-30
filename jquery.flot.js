@@ -36,25 +36,25 @@ Licensed under the MIT license.
 		o.r=r||0;
 		o.g=g||0;
 		o.b=b||0;
-		o.a=a!=null?a:1;
+		o.a=a!==null?a:1;
 		o.add=function(c,d){
 			for(var i=0;i<c.length;++i)o[c.charAt(i)]+=d;
-			return o.normalize()
+			return o.normalize();
 		};
 		o.scale=function(c,f){
 			for(var i=0;i<c.length;++i)o[c.charAt(i)]*=f;
-			return o.normalize()
+			return o.normalize();
 		};
 		o.toString=function(){
 			if(o.a>=1){
-				return"rgb("+[o.r,o.g,o.b].join(",")+")"
+				return"rgb("+[o.r,o.g,o.b].join(",")+")";
 			} else {
-				return"rgba("+[o.r,o.g,o.b,o.a].join(",")+")"
+				return"rgba("+[o.r,o.g,o.b,o.a].join(",")+")";
 			}
 		};
 		o.normalize=function(){
 			function clamp(min,value,max){
-				return value<min?min:value>max?max:value
+				return value<min?min:value>max?max:value;
 			}
 			o.r=clamp(0,parseInt(o.r),255);
 			o.g=clamp(0,parseInt(o.g),255);
@@ -63,9 +63,9 @@ Licensed under the MIT license.
 			return o;
 		};
 		o.clone=function(){
-			return $.color.make(o.r,o.b,o.g,o.a)
+			return $.color.make(o.r,o.b,o.g,o.a);
 		};
-		return o.normalize()
+		return o.normalize();
 	};
 	$.color.extract=function(elem,css){
 		var c;
@@ -75,7 +75,7 @@ Licensed under the MIT license.
 			elem=elem.parent()
 		} while(elem.length&&!$.nodeName(elem.get(0),"body"));
 		if(c=="rgba(0, 0, 0, 0)")c="transparent";
-		return $.color.parse(c)
+		return $.color.parse(c);
 	};
 	$.color.parse=function(str){
 		var res,
@@ -89,7 +89,7 @@ Licensed under the MIT license.
 		if(name=="transparent")return m(255,255,255,0);
 		else{
 			res=lookupColors[name]||[0,0,0];
-			return m(res[0],res[1],res[2])
+			return m(res[0],res[1],res[2]);
 		}
 	};
 	var lookupColors={
