@@ -804,12 +804,12 @@ Licensed under the MIT license.
             highlights = [];
             plot = null;
         };
-	    plot.resize = function () {
-		    var width = placeholder.width();
-		    var height = placeholder.height();
-		    surface.resize(width, height);
-		    overlay.resize(width, height);
-	    };
+            plot.resize = function () {
+                    var width = placeholder.width();
+                    var height = placeholder.height();
+                    surface.resize(width, height);
+                    overlay.resize(width, height);
+            };
 
         // public attributes
         plot.hooks = hooks;
@@ -2216,7 +2216,7 @@ Licensed under the MIT license.
 			ctx.lineTo(x + xoff, y + yoff);
 		}
 		ctx.stroke();
-	    }
+            }
 
 
             // draw border
@@ -2729,7 +2729,7 @@ Licensed under the MIT license.
             // fill the bar
             if (fillStyleCallback) {
                 c.fillStyle = fillStyleCallback(bottom, top);
-                c.fillRect(left, top, right - left, bottom - top)
+                c.fillRect(left, top, right - left, bottom - top);
             }
 
             // draw outline
@@ -2824,7 +2824,7 @@ Licensed under the MIT license.
                 var lf = options.legend.labelFormatter, s, label;
 
 		// Build a list of legend entries, with each having a label and a color
-		var i
+		var i;
 		for (i = 0; i < series.length; ++i) {
 			s = series[i];
 			if (s.label) {
@@ -2883,9 +2883,7 @@ Licensed under the MIT license.
 		if (options.legend.container !== null)
 			$(options.legend.container).html(table);
 		else {
-			var pos = "",
-			    p = options.legend.position,
-			    m = options.legend.margin;
+			var pos = "", p = options.legend.position, m = options.legend.margin;
 			if (m[0] === null)
 				m = [m, m];
 			if (p.charAt(0) == "n")
@@ -2959,13 +2957,12 @@ Licensed under the MIT license.
 
 				// For points and lines, the cursor must be within a
 				// certain distance to the data point
-				if (x - mx > maxx || x - mx < -maxx ||
-				    y - my > maxy || y - my < -maxy)
+				if (x - mx > maxx || x - mx < -maxx ||  y - my > maxy || y - my < -maxy)
 					continue;
 
 				// We have to calculate distances in pixels, not in
 				// data units, because the scales of the axes may be different
-				var dx = Math.abs(axisx.p2c(x) - mouseX;
+				var dx = Math.abs(axisx.p2c(x) - mouseX);
 				var dy = Math.abs(axisy.p2c(y) - mouseY);
 				var dist = dx * dx + dy * dy; // we save the sqrt
 
