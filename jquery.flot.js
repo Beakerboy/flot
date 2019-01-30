@@ -71,15 +71,15 @@ Licensed under the MIT license.
 		var c;
 		do{
 			c=elem.css(css).toLowerCase();
-			if(c!=""&&c!="transparent")break;
-			elem=elem.parent()
+			if(c!==""&&c!="transparent")break;
+			elem=elem.parent();
 		} while(elem.length&&!$.nodeName(elem.get(0),"body"));
 		if(c=="rgba(0, 0, 0, 0)")c="transparent";
 		return $.color.parse(c);
 	};
 	$.color.parse=function(str){
-		var res,
-		    m=$.color.make;
+		var res;
+		var m=$.color.make;
 		if(res=/rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(str))return m(parseInt(res[1],10),parseInt(res[2],10),parseInt(res[3],10));
 		if(res=/rgba\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(str))return m(parseInt(res[1],10),parseInt(res[2],10),parseInt(res[3],10),parseFloat(res[4]));
 		if(res=/rgb\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*\)/.exec(str))return m(parseFloat(res[1])*2.55,parseFloat(res[2])*2.55,parseFloat(res[3])*2.55);
@@ -136,7 +136,7 @@ Licensed under the MIT license.
 		silver:[192,192,192],
 		white:[255,255,255],
 		yellow:[255,255,0]
-	}
+	};
 })(jQuery);
 
 // the actual Flot code
@@ -176,7 +176,7 @@ Licensed under the MIT license.
 
 		var element = container.children("." + cls)[0];
 
-		if (element == null) {
+		if (element === null) {
 
 			element = document.createElement("canvas");
 			element.className = cls;
@@ -325,7 +325,7 @@ Licensed under the MIT license.
 									}
 								}
 
-								if (positions.length == 0) {
+								if (positions.length === 0) {
 									delete styleCache[key];
 								}
 							}
@@ -350,11 +350,11 @@ Licensed under the MIT license.
 
 		// Create the text layer if it doesn't exist
 
-		if (layer == null) {
+		if (layer === null) {
 
 			// Create the text layer container, if it doesn't exist
 
-			if (this.textContainer == null) {
+			if (this.textContainer === null) {
 				this.textContainer = $("<div class='flot-text'></div>")
 					.css({
 						position: "absolute",
@@ -443,13 +443,13 @@ Licensed under the MIT license.
 
 		layerCache = this._textCache[layer];
 
-		if (layerCache == null) {
+		if (layerCache === null) {
 			layerCache = this._textCache[layer] = {};
 		}
 
 		styleCache = layerCache[textStyle];
 
-		if (styleCache == null) {
+		if (styleCache === null) {
 			styleCache = layerCache[textStyle] = {};
 		}
 
@@ -457,7 +457,7 @@ Licensed under the MIT license.
 
 		// If we can't find a matching element in our cache, create a new one
 
-		if (info == null) {
+		if (info === null) {
 
 			var element = $("<div></div>").html(text)
 				.css({
@@ -583,9 +583,9 @@ Licensed under the MIT license.
 	//     Angle is currently unused, it will be implemented in the future.
 
 	Canvas.prototype.removeText = function(layer, x, y, text, font, angle) {
-		if (text == null) {
+		if (text === null) {
 			var layerCache = this._textCache[layer];
-			if (layerCache != null) {
+			if (layerCache !== null) {
 				for (var styleKey in layerCache) {
 					if (hasOwnProperty.call(layerCache, styleKey)) {
 						var styleCache = layerCache[styleKey];
