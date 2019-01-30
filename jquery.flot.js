@@ -2184,45 +2184,40 @@ Licensed under the MIT license.
 
                 ctx.beginPath();
                 for (i = 0; i < axis.ticks.length; ++i) {
-                    var v = axis.ticks[i].v;
+			var v = axis.ticks[i].v;
 
-                    xoff = yoff = 0;
+			xoff = yoff = 0;
+			// skip those lying on the axes if we got a border
+			if (isNaN(v) || v < axis.min || v > axis.max || (t == "full" && ((typeof bw == "object" && bw[axis.position] > 0) || bw > 0) && (v == axis.min || v == axis.max)))
+				continue;
 
-                    if (isNaN(v) || v < axis.min || v > axis.max
-                        // skip those lying on the axes if we got a border
-                        || (t == "full"
-                            && ((typeof bw == "object" && bw[axis.position] > 0) || bw > 0)
-                            && (v == axis.min || v == axis.max)))
-                        continue;
+			if (axis.direction == "x") {
+				x = axis.p2c(v);
+				yoff = t == "full" ? -plotHeight : t;
 
-                    if (axis.direction == "x") {
-                        x = axis.p2c(v);
-                        yoff = t == "full" ? -plotHeight : t;
+				if (axis.position == "top")
+					yoff = -yoff;
+			}
+			else {
+				y = axis.p2c(v);
+				xoff = t == "full" ? -plotWidth : t;
 
-                        if (axis.position == "top")
-                            yoff = -yoff;
-                    }
-                    else {
-                        y = axis.p2c(v);
-                        xoff = t == "full" ? -plotWidth : t;
+				if (axis.position == "left")
+					xoff = -xoff;
+			}
 
-                        if (axis.position == "left")
-                            xoff = -xoff;
-                    }
+			if (ctx.lineWidth == 1) {
+				if (axis.direction == "x")
+					x = Math.floor(x) + 0.5;
+				else
+					y = Math.floor(y) + 0.5;
+			}
 
-                    if (ctx.lineWidth == 1) {
-                        if (axis.direction == "x")
-                            x = Math.floor(x) + 0.5;
-                        else
-                            y = Math.floor(y) + 0.5;
-                    }
-
-                    ctx.moveTo(x, y);
-                    ctx.lineTo(x + xoff, y + yoff);
-                }
-
-                ctx.stroke();
-            }
+			ctx.moveTo(x, y);
+			ctx.lineTo(x + xoff, y + yoff);
+		}
+		ctx.stroke();
+	    }
 
 
             // draw border
@@ -2299,7 +2294,7 @@ Licensed under the MIT license.
 
                 surface.removeText(layer);
 
-                if (!axis.show || axis.ticks.length == 0)
+                if (!axis.show || axis.ticks.length === 0)
                     return;
 
                 for (var i = 0; i < axis.ticks.length; ++i) {
@@ -2353,7 +2348,7 @@ Licensed under the MIT license.
                     var x1 = points[i - ps], y1 = points[i - ps + 1],
                         x2 = points[i], y2 = points[i + 1];
 
-                    if (x1 == null || x2 == null)
+                    if (x1 === null || x2 === null)
                         continue;
 
                     // clip with ymin
@@ -2444,7 +2439,7 @@ Licensed under the MIT license.
                         x2 = points[i], y2 = points[i + ypos];
 
                     if (areaOpen) {
-                        if (ps > 0 && x1 != null && x2 == null) {
+                        if (ps > 0 && x1 !== null && x2 === null) {
                             // at turning point
                             segmentEnd = i;
                             ps = -ps;
@@ -2463,7 +2458,7 @@ Licensed under the MIT license.
                         }
                     }
 
-                    if (x1 == null || x2 == null)
+                    if (x1 === null || x2 === null)
                         continue;
 
                     // clip x values
@@ -2602,7 +2597,7 @@ Licensed under the MIT license.
 
                 for (var i = 0; i < points.length; i += ps) {
                     var x = points[i], y = points[i + 1];
-                    if (x == null || x < axisx.min || x > axisx.max || y < axisy.min || y > axisy.max)
+                    if (x === null || x < axisx.min || x > axisx.max || y < axisy.min || y > axisy.max)
                         continue;
 
                     ctx.beginPath();
@@ -2635,7 +2630,7 @@ Licensed under the MIT license.
             // Doing the conditional here allows the shadow setting to still be 
             // optional even with a lineWidth of 0.
 
-            if( lw == 0 )
+            if( lw === 0 )
                 lw = 0.0001;
 
             if (lw > 0 && sw > 0) {
@@ -2769,7 +2764,7 @@ Licensed under the MIT license.
                 var points = datapoints.points, ps = datapoints.pointsize;
 
                 for (var i = 0; i < points.length; i += ps) {
-                    if (points[i] == null)
+                    if (points[i] === null)
                         continue;
                     drawBar(points[i], points[i + 1], points[i + 2], barLeft, barRight, fillStyleCallback, axisx, axisy, ctx, series.bars.horizontal, series.bars.lineWidth);
                 }
@@ -2816,7 +2811,7 @@ Licensed under the MIT license.
 
         function insertLegend() {
 
-            if (options.legend.container != null) {
+            if (options.legend.container !== null) {
                 $(options.legend.container).html("");
             } else {
                 placeholder.find(".legend").remove();
@@ -2867,7 +2862,7 @@ Licensed under the MIT license.
 
                 var entry = entries[i];
 
-                if (i % options.legend.noColumns == 0) {
+                if (i % options.legend.noColumns === 0) {
                     if (rowStarted)
                         fragments.push('</tr>');
                     fragments.push('<tr>');
@@ -2883,17 +2878,17 @@ Licensed under the MIT license.
             if (rowStarted)
                 fragments.push('</tr>');
 
-            if (fragments.length == 0)
+            if (fragments.length === 0)
                 return;
 
             var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
-            if (options.legend.container != null)
+            if (options.legend.container !== null)
                 $(options.legend.container).html(table);
             else {
                 var pos = "",
                     p = options.legend.position,
                     m = options.legend.margin;
-                if (m[0] == null)
+                if (m[0] === null)
                     m = [m, m];
                 if (p.charAt(0) == "n")
                     pos += 'top:' + (m[1] + plotOffset.top) + 'px;';
@@ -2904,12 +2899,12 @@ Licensed under the MIT license.
                 else if (p.charAt(1) == "w")
                     pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
                 var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
-                if (options.legend.backgroundOpacity != 0.0) {
+                if (options.legend.backgroundOpacity !== 0.0) {
                     // put in the transparent background
                     // separately to avoid blended labels and
                     // label boxes
                     var c = options.legend.backgroundColor;
-                    if (c == null) {
+                    if (c === null) {
                         c = options.grid.backgroundColor;
                         if (c && typeof c == "string")
                             c = $.color.parse(c);
@@ -2960,7 +2955,7 @@ Licensed under the MIT license.
                 if (s.lines.show || s.points.show) {
                     for (j = 0; j < points.length; j += ps) {
                         var x = points[j], y = points[j + 1];
-                        if (x == null)
+                        if (x === null)
                             continue;
 
                         // For points and lines, the cursor must be within a
@@ -3034,7 +3029,7 @@ Licensed under the MIT license.
         function onMouseMove(e) {
             if (options.grid.hoverable)
                 triggerClickHoverEvent("plothover", e,
-                                       function (s) { return s["hoverable"] != false; });
+                                       function (s) { return s.hoverable != false; });
         }
 
         function onMouseLeave(e) {
@@ -3045,7 +3040,7 @@ Licensed under the MIT license.
 
         function onClick(e) {
             triggerClickHoverEvent("plotclick", e,
-                                   function (s) { return s["clickable"] != false; });
+                                   function (s) { return s.clickable != false; });
         }
 
         // trigger click or hover event (they send the same parameters
