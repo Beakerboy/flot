@@ -56,9 +56,9 @@ Licensed under the MIT license.
 			function clamp(min,value,max){
 				return value<min?min:value>max?max:value;
 			}
-			o.r=clamp(0,parseInt(o.r),255);
-			o.g=clamp(0,parseInt(o.g),255);
-			o.b=clamp(0,parseInt(o.b),255);
+			o.r=clamp(0,parseInt(o.r,10),255);
+			o.g=clamp(0,parseInt(o.g,10),255);
+			o.b=clamp(0,parseInt(o.b,10),255);
 			o.a=clamp(0,o.a,1);
 			return o;
 		};
