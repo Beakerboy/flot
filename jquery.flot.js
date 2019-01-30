@@ -805,10 +805,10 @@ Licensed under the MIT license.
             plot = null;
         };
         plot.resize = function () {
-        	var width = placeholder.width(),
-        		height = placeholder.height();
-            surface.resize(width, height);
-            overlay.resize(width, height);
+		var width = placeholder.width();
+        	var height = placeholder.height();
+		surface.resize(width, height);
+		overlay.resize(width, height);
         };
 
         // public attributes
@@ -856,23 +856,21 @@ Licensed under the MIT license.
             // not expected behavior; avoid it by replacing them here.
 
             if (opts && opts.colors) {
-            	options.colors = opts.colors;
+		    options.colors = opts.colors;
             }
 
-            if (options.xaxis.color == null)
-                options.xaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-            if (options.yaxis.color == null)
-                options.yaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-
-            if (options.xaxis.tickColor == null) // grid.tickColor for back-compatibility
-                options.xaxis.tickColor = options.grid.tickColor || options.xaxis.color;
-            if (options.yaxis.tickColor == null) // grid.tickColor for back-compatibility
-                options.yaxis.tickColor = options.grid.tickColor || options.yaxis.color;
-
-            if (options.grid.borderColor == null)
-                options.grid.borderColor = options.grid.color;
-            if (options.grid.tickColor == null)
-                options.grid.tickColor = $.color.parse(options.grid.color).scale('a', 0.22).toString();
+            if (options.xaxis.color === null)
+		    options.xaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
+            if (options.yaxis.color === null)
+		    options.yaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
+            if (options.xaxis.tickColor === null) // grid.tickColor for back-compatibility
+		    options.xaxis.tickColor = options.grid.tickColor || options.xaxis.color;
+            if (options.yaxis.tickColor === null) // grid.tickColor for back-compatibility
+		    options.yaxis.tickColor = options.grid.tickColor || options.yaxis.color;
+            if (options.grid.borderColor === null)
+		    options.grid.borderColor = options.grid.color;
+            if (options.grid.tickColor === null)
+		    options.grid.tickColor = $.color.parse(options.grid.color).scale('a', 0.22).toString();
 
             // Fill in defaults for axis options, including any unspecified
             // font-spec fields, if a font-spec was provided.
@@ -936,18 +934,18 @@ Licensed under the MIT license.
             }
 
             // backwards compatibility, to be removed in future
-            if (options.xaxis.noTicks && options.xaxis.ticks == null)
+            if (options.xaxis.noTicks && options.xaxis.ticks === null)
                 options.xaxis.ticks = options.xaxis.noTicks;
-            if (options.yaxis.noTicks && options.yaxis.ticks == null)
+            if (options.yaxis.noTicks && options.yaxis.ticks === null)
                 options.yaxis.ticks = options.yaxis.noTicks;
             if (options.x2axis) {
                 options.xaxes[1] = $.extend(true, {}, options.xaxis, options.x2axis);
                 options.xaxes[1].position = "top";
                 // Override the inherit to allow the axis to auto-scale
-                if (options.x2axis.min == null) {
+                if (options.x2axis.min === null) {
                     options.xaxes[1].min = null;
                 }
-                if (options.x2axis.max == null) {
+                if (options.x2axis.max === null) {
                     options.xaxes[1].max = null;
                 }
             }
@@ -955,10 +953,10 @@ Licensed under the MIT license.
                 options.yaxes[1] = $.extend(true, {}, options.yaxis, options.y2axis);
                 options.yaxes[1].position = "right";
                 // Override the inherit to allow the axis to auto-scale
-                if (options.y2axis.min == null) {
+                if (options.y2axis.min === null) {
                     options.yaxes[1].min = null;
                 }
-                if (options.y2axis.max == null) {
+                if (options.y2axis.max === null) {
                     options.yaxes[1].max = null;
                 }
             }
@@ -972,9 +970,9 @@ Licensed under the MIT license.
                 $.extend(true, options.series.points, options.points);
             if (options.bars)
                 $.extend(true, options.series.bars, options.bars);
-            if (options.shadowSize != null)
+            if (options.shadowSize !== null)
                 options.series.shadowSize = options.shadowSize;
-            if (options.highlightColor != null)
+            if (options.highlightColor !== null)
                 options.series.highlightColor = options.highlightColor;
 
             // save options on axes for future reference
@@ -1002,7 +1000,7 @@ Licensed under the MIT license.
             for (var i = 0; i < d.length; ++i) {
                 var s = $.extend(true, {}, options.series);
 
-                if (d[i].data != null) {
+                if (d[i].data !== null) {
                     s.data = d[i].data; // move the data instead of deep-copy
                     delete d[i].data;
 
