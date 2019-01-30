@@ -170,9 +170,10 @@ More detail and specific examples can be found in the included HTML file.
 
 			// Fix up the raw data from Flot, ensuring the data is numeric
 			var i;
+			var value;
 			for (i = 0; i < data.length; ++i) {
 
-				var value = data[i].data;
+				value = data[i].data;
 
 				// If the data is an array, we'll assume that it's a standard
 				// Flot x-y pair, and are concerned only with the second value.
@@ -209,7 +210,7 @@ More detail and specific examples can be found in the included HTML file.
 
 			// Count the number of slices with percentages below the combine
 			// threshold; if it turns out to be just one, we won't combine.
-			var value;
+
 			for (i = 0; i < data.length; ++i) {
 				value = data[i].data[0][1];
 				if (value / total <= options.series.pie.combine.threshold) {
@@ -565,7 +566,7 @@ More detail and specific examples can be found in the included HTML file.
 
 		function isPointInPoly(poly, pt) {
 			for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-				((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1]< poly[i][1])) && (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0]) && (c = !c);
+				if((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1]< poly[i][1])) && (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0]){c = !c;}
 			return c;
 		}
 
