@@ -169,8 +169,8 @@ More detail and specific examples can be found in the included HTML file.
 				newdata = [];
 
 			// Fix up the raw data from Flot, ensuring the data is numeric
-
-			for (var i = 0; i < data.length; ++i) {
+			var i;
+			for (i = 0; i < data.length; ++i) {
 
 				var value = data[i].data;
 
@@ -182,7 +182,7 @@ More detail and specific examples can be found in the included HTML file.
 				// that the user may have stored in higher indexes.
 
 				if ($.isArray(value) && value.length == 1) {
-    				value = value[0];
+					value = value[0];
 				}
 
 				if ($.isArray(value)) {
@@ -203,15 +203,15 @@ More detail and specific examples can be found in the included HTML file.
 
 			// Sum up all the slices, so we can calculate percentages for each
 
-			for (var i = 0; i < data.length; ++i) {
+			for (i = 0; i < data.length; ++i) {
 				total += data[i].data[0][1];
 			}
 
 			// Count the number of slices with percentages below the combine
 			// threshold; if it turns out to be just one, we won't combine.
-
-			for (var i = 0; i < data.length; ++i) {
-				var value = data[i].data[0][1];
+			var value;
+			for (i = 0; i < data.length; ++i) {
+				value = data[i].data[0][1];
 				if (value / total <= options.series.pie.combine.threshold) {
 					combined += value;
 					numCombined++;
@@ -221,8 +221,8 @@ More detail and specific examples can be found in the included HTML file.
 				}
 			}
 
-			for (var i = 0; i < data.length; ++i) {
-				var value = data[i].data[0][1];
+			for (i = 0; i < data.length; ++i) {
+				value = data[i].data[0][1];
 				if (numCombined < 2 || value / total > options.series.pie.combine.threshold) {
 					newdata.push(
 						$.extend(data[i], {     /* extend to allow keeping all other original data valuesand using them e.g. in labelFormatter. */
