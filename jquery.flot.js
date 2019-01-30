@@ -847,147 +847,145 @@ Licensed under the MIT license.
         }
 
         function parseOptions(opts) {
-
-            $.extend(true, options, opts);
-
-            // $.extend merges arrays, rather than replacing them.  When less
-            // colors are provided than the size of the default palette, we
-            // end up with those colors plus the remaining defaults, which is
-            // not expected behavior; avoid it by replacing them here.
-
-            if (opts && opts.colors) {
-		    options.colors = opts.colors;
-            }
-
-            if (options.xaxis.color === null)
-		    options.xaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-            if (options.yaxis.color === null)
-		    options.yaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-            if (options.xaxis.tickColor === null) // grid.tickColor for back-compatibility
+		$.extend(true, options, opts);
+		
+		// $.extend merges arrays, rather than replacing them.  When less
+		// colors are provided than the size of the default palette, we
+		// end up with those colors plus the remaining defaults, which is
+		// not expected behavior; avoid it by replacing them here.
+            
+		if (opts && opts.colors) {
+			options.colors = opts.colors;
+		}
+		
+		if (options.xaxis.color === null)
+			options.xaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
+		if (options.yaxis.color === null)
+			options.yaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
+		if (options.xaxis.tickColor === null) // grid.tickColor for back-compatibility
 		    options.xaxis.tickColor = options.grid.tickColor || options.xaxis.color;
-            if (options.yaxis.tickColor === null) // grid.tickColor for back-compatibility
+		if (options.yaxis.tickColor === null) // grid.tickColor for back-compatibility
 		    options.yaxis.tickColor = options.grid.tickColor || options.yaxis.color;
-            if (options.grid.borderColor === null)
-		    options.grid.borderColor = options.grid.color;
-            if (options.grid.tickColor === null)
-		    options.grid.tickColor = $.color.parse(options.grid.color).scale('a', 0.22).toString();
+		if (options.grid.borderColor === null)
+			options.grid.borderColor = options.grid.color;
+		if (options.grid.tickColor === null)
+			options.grid.tickColor = $.color.parse(options.grid.color).scale('a', 0.22).toString();
 
-            // Fill in defaults for axis options, including any unspecified
-            // font-spec fields, if a font-spec was provided.
+		// Fill in defaults for axis options, including any unspecified
+		// font-spec fields, if a font-spec was provided.
 
-            // If no x/y axis options were provided, create one of each anyway,
-            // since the rest of the code assumes that they exist.
+		// If no x/y axis options were provided, create one of each anyway,
+		// since the rest of the code assumes that they exist.
 
-            var i, axisOptions, axisCount,
-                fontSize = placeholder.css("font-size"),
-                fontSizeDefault = fontSize ? +fontSize.replace("px", "") : 13,
-                fontDefaults = {
-                    style: placeholder.css("font-style"),
-                    size: Math.round(0.8 * fontSizeDefault),
-                    variant: placeholder.css("font-variant"),
-                    weight: placeholder.css("font-weight"),
-                    family: placeholder.css("font-family")
-                };
+		var i, axisOptions, axisCount,
+		    fontSize = placeholder.css("font-size"),
+		    fontSizeDefault = fontSize ? +fontSize.replace("px", "") : 13,
+		    fontDefaults = {
+			    style: placeholder.css("font-style"),
+			    size: Math.round(0.8 * fontSizeDefault),
+			    variant: placeholder.css("font-variant"),
+			    weight: placeholder.css("font-weight"),
+			    family: placeholder.css("font-family")
+		    };
 
-            axisCount = options.xaxes.length || 1;
-            for (i = 0; i < axisCount; ++i) {
+		axisCount = options.xaxes.length || 1;
+		for (i = 0; i < axisCount; ++i) {
 
-                axisOptions = options.xaxes[i];
-                if (axisOptions && !axisOptions.tickColor) {
-                    axisOptions.tickColor = axisOptions.color;
-                }
+			axisOptions = options.xaxes[i];
+			if (axisOptions && !axisOptions.tickColor) {
+				axisOptions.tickColor = axisOptions.color;
+			}
 
-                axisOptions = $.extend(true, {}, options.xaxis, axisOptions);
-                options.xaxes[i] = axisOptions;
+			axisOptions = $.extend(true, {}, options.xaxis, axisOptions);
+			options.xaxes[i] = axisOptions;
 
-                if (axisOptions.font) {
-                    axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
-                    if (!axisOptions.font.color) {
-                        axisOptions.font.color = axisOptions.color;
-                    }
-                    if (!axisOptions.font.lineHeight) {
-                        axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
-                    }
-                }
-            }
+			if (axisOptions.font) {
+				axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
+				if (!axisOptions.font.color) {
+					axisOptions.font.color = axisOptions.color;
+				}
+				if (!axisOptions.font.lineHeight) {
+					axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
+				}
+			}
+		}
 
-            axisCount = options.yaxes.length || 1;
-            for (i = 0; i < axisCount; ++i) {
+		axisCount = options.yaxes.length || 1;
+		for (i = 0; i < axisCount; ++i) {
+			axisOptions = options.yaxes[i];
+			if (axisOptions && !axisOptions.tickColor) {
+				axisOptions.tickColor = axisOptions.color;
+			}
 
-                axisOptions = options.yaxes[i];
-                if (axisOptions && !axisOptions.tickColor) {
-                    axisOptions.tickColor = axisOptions.color;
-                }
+			axisOptions = $.extend(true, {}, options.yaxis, axisOptions);
+			options.yaxes[i] = axisOptions;
 
-                axisOptions = $.extend(true, {}, options.yaxis, axisOptions);
-                options.yaxes[i] = axisOptions;
+			if (axisOptions.font) {
+				axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
+				if (!axisOptions.font.color) {
+					axisOptions.font.color = axisOptions.color;
+				}
+				if (!axisOptions.font.lineHeight) {
+					axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
+				}
+			}
+		}
 
-                if (axisOptions.font) {
-                    axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
-                    if (!axisOptions.font.color) {
-                        axisOptions.font.color = axisOptions.color;
-                    }
-                    if (!axisOptions.font.lineHeight) {
-                        axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
-                    }
-                }
-            }
+		// backwards compatibility, to be removed in future
+		if (options.xaxis.noTicks && options.xaxis.ticks === null)
+			options.xaxis.ticks = options.xaxis.noTicks;
+		if (options.yaxis.noTicks && options.yaxis.ticks === null)
+			options.yaxis.ticks = options.yaxis.noTicks;
+		if (options.x2axis) {
+			options.xaxes[1] = $.extend(true, {}, options.xaxis, options.x2axis);
+			options.xaxes[1].position = "top";
+			// Override the inherit to allow the axis to auto-scale
+			if (options.x2axis.min === null) {
+				options.xaxes[1].min = null;
+			}
+			if (options.x2axis.max === null) {
+				options.xaxes[1].max = null;
+			}
+		}
+		if (options.y2axis) {
+			options.yaxes[1] = $.extend(true, {}, options.yaxis, options.y2axis);
+			options.yaxes[1].position = "right";
+			// Override the inherit to allow the axis to auto-scale
+			if (options.y2axis.min === null) {
+				options.yaxes[1].min = null;
+			}
+			if (options.y2axis.max === null) {
+				options.yaxes[1].max = null;
+			}
+		}
+		if (options.grid.coloredAreas)
+			options.grid.markings = options.grid.coloredAreas;
+		if (options.grid.coloredAreasColor)
+			options.grid.markingsColor = options.grid.coloredAreasColor;
+		if (options.lines)
+			$.extend(true, options.series.lines, options.lines);
+		if (options.points)
+			$.extend(true, options.series.points, options.points);
+		if (options.bars)
+			$.extend(true, options.series.bars, options.bars);
+		if (options.shadowSize !== null)
+			options.series.shadowSize = options.shadowSize;
+		if (options.highlightColor !== null)
+			options.series.highlightColor = options.highlightColor;
 
-            // backwards compatibility, to be removed in future
-            if (options.xaxis.noTicks && options.xaxis.ticks === null)
-                options.xaxis.ticks = options.xaxis.noTicks;
-            if (options.yaxis.noTicks && options.yaxis.ticks === null)
-                options.yaxis.ticks = options.yaxis.noTicks;
-            if (options.x2axis) {
-                options.xaxes[1] = $.extend(true, {}, options.xaxis, options.x2axis);
-                options.xaxes[1].position = "top";
-                // Override the inherit to allow the axis to auto-scale
-                if (options.x2axis.min === null) {
-                    options.xaxes[1].min = null;
-                }
-                if (options.x2axis.max === null) {
-                    options.xaxes[1].max = null;
-                }
-            }
-            if (options.y2axis) {
-                options.yaxes[1] = $.extend(true, {}, options.yaxis, options.y2axis);
-                options.yaxes[1].position = "right";
-                // Override the inherit to allow the axis to auto-scale
-                if (options.y2axis.min === null) {
-                    options.yaxes[1].min = null;
-                }
-                if (options.y2axis.max === null) {
-                    options.yaxes[1].max = null;
-                }
-            }
-            if (options.grid.coloredAreas)
-                options.grid.markings = options.grid.coloredAreas;
-            if (options.grid.coloredAreasColor)
-                options.grid.markingsColor = options.grid.coloredAreasColor;
-            if (options.lines)
-                $.extend(true, options.series.lines, options.lines);
-            if (options.points)
-                $.extend(true, options.series.points, options.points);
-            if (options.bars)
-                $.extend(true, options.series.bars, options.bars);
-            if (options.shadowSize !== null)
-                options.series.shadowSize = options.shadowSize;
-            if (options.highlightColor !== null)
-                options.series.highlightColor = options.highlightColor;
+		// save options on axes for future reference
+		for (i = 0; i < options.xaxes.length; ++i)
+			getOrCreateAxis(xaxes, i + 1).options = options.xaxes[i];
+		for (i = 0; i < options.yaxes.length; ++i)
+			getOrCreateAxis(yaxes, i + 1).options = options.yaxes[i];
 
-            // save options on axes for future reference
-            for (i = 0; i < options.xaxes.length; ++i)
-                getOrCreateAxis(xaxes, i + 1).options = options.xaxes[i];
-            for (i = 0; i < options.yaxes.length; ++i)
-                getOrCreateAxis(yaxes, i + 1).options = options.yaxes[i];
+		// add hooks from options
+		for (var n in hooks)
+			if (options.hooks[n] && options.hooks[n].length)
+				hooks[n] = hooks[n].concat(options.hooks[n]);
 
-            // add hooks from options
-            for (var n in hooks)
-                if (options.hooks[n] && options.hooks[n].length)
-                    hooks[n] = hooks[n].concat(options.hooks[n]);
-
-            executeHooks(hooks.processOptions, [options]);
-        }
+		executeHooks(hooks.processOptions, [options]);
+	}
 
         function setData(d) {
             series = parseData(d);
@@ -1061,10 +1059,10 @@ Licensed under the MIT license.
                 axis = xaxes[i];
                 if (axis && axis.used) {
                     key = "x" + axis.n;
-                    if (pos[key] == null && axis.n == 1)
+                    if (pos[key] === null && axis.n == 1)
                         key = "x";
 
-                    if (pos[key] != null) {
+                    if (pos[key] !== null) {
                         res.left = axis.p2c(pos[key]);
                         break;
                     }
@@ -1075,10 +1073,10 @@ Licensed under the MIT license.
                 axis = yaxes[i];
                 if (axis && axis.used) {
                     key = "y" + axis.n;
-                    if (pos[key] == null && axis.n == 1)
+                    if (pos[key] === null && axis.n == 1)
                         key = "y";
 
-                    if (pos[key] != null) {
+                    if (pos[key] !== null) {
                         res.top = axis.p2c(pos[key]);
                         break;
                     }
@@ -1108,7 +1106,7 @@ Licensed under the MIT license.
 
             for (i = 0; i < series.length; ++i) {
                 var sc = series[i].color;
-                if (sc != null) {
+                if (sc !== null) {
                     neededColors--;
                     if (typeof sc == "number" && sc > maxIndex) {
                         maxIndex = sc;
@@ -1141,7 +1139,7 @@ Licensed under the MIT license.
                 // Reset the variation after every few cycles, or else
                 // it will end up producing only white or black colors.
 
-                if (i % colorPoolSize == 0 && i) {
+                if (i % colorPoolSize === 0 && i) {
                     if (variation >= 0) {
                         if (variation < 0.5) {
                             variation = -variation - 0.2;
@@ -1167,7 +1165,7 @@ Licensed under the MIT license.
                     s.color = colors[s.color].toString();
 
                 // turn on lines automatically in case nothing is set
-                if (s.lines.show == null) {
+                if (s.lines.show === null) {
                     var v, show = true;
                     for (v in s)
                         if (s[v] && s[v].show) {
@@ -1181,7 +1179,7 @@ Licensed under the MIT license.
                 // If nothing was provided for lines.zero, default it to match
                 // lines.fill, since areas by default should extend to zero.
 
-                if (s.lines.zero == null) {
+                if (s.lines.zero === null) {
                     s.lines.zero = !!s.lines.fill;
                 }
 
@@ -1245,7 +1243,7 @@ Licensed under the MIT license.
                     s.datapoints.format = format;
                 }
 
-                if (s.datapoints.pointsize != null)
+                if (s.datapoints.pointsize !== null)
                     continue; // already filled in
 
                 s.datapoints.pointsize = format.length;
@@ -1259,14 +1257,14 @@ Licensed under the MIT license.
                 for (j = k = 0; j < data.length; ++j, k += ps) {
                     p = data[j];
 
-                    var nullify = p == null;
+                    var nullify = p === null;
                     if (!nullify) {
                         for (m = 0; m < ps; ++m) {
                             val = p[m];
                             f = format[m];
 
                             if (f) {
-                                if (f.number && val != null) {
+                                if (f.number && val !== null) {
                                     val = +val; // convert to number
                                     if (isNaN(val))
                                         val = null;
@@ -1276,11 +1274,11 @@ Licensed under the MIT license.
                                         val = -fakeInfinity;
                                 }
 
-                                if (val == null) {
+                                if (val === null) {
                                     if (f.required)
                                         nullify = true;
 
-                                    if (f.defaultValue != null)
+                                    if (f.defaultValue !== null)
                                         val = f.defaultValue;
                                 }
                             }
@@ -1292,7 +1290,7 @@ Licensed under the MIT license.
                     if (nullify) {
                         for (m = 0; m < ps; ++m) {
                             val = points[k + m];
-                            if (val != null) {
+                            if (val !== null) {
                                 f = format[m];
                                 // extract min/max info
                                 if (f.autoscale !== false) {
@@ -1312,7 +1310,7 @@ Licensed under the MIT license.
                         // perhaps shouldn't be here, but lacking
                         // better means...
                         if (insertSteps && k > 0
-                            && points[k - ps] != null
+                            && points[k - ps] !== null
                             && points[k - ps] != points[k]
                             && points[k - ps + 1] != points[k + 1]) {
                             // copy the point to make room for a middle point
@@ -1347,7 +1345,7 @@ Licensed under the MIT license.
                     xmax = bottomSentry, ymax = bottomSentry;
 
                 for (j = 0; j < points.length; j += ps) {
-                    if (points[j] == null)
+                    if (points[j] === null)
                         continue;
 
                     for (m = 0; m < ps; ++m) {
@@ -1581,7 +1579,7 @@ Licensed under the MIT license.
 
             // The ticks for the first axis in each direction stretch across
 
-            if (tickLength == null) {
+            if (tickLength === null) {
                 tickLength = first ? "full" : 5;
             }
 
@@ -1643,7 +1641,7 @@ Licensed under the MIT license.
             // check stuff from the plot (FIXME: this should just read
             // a value from the series, otherwise it's impossible to
             // customize)
-            if (minMargin == null) {
+            if (minMargin === null) {
                 minMargin = 0;
                 for (i = 0; i < series.length; ++i)
                     minMargin = Math.max(minMargin, 2 * (series[i].points.radius + series[i].points.lineWidth/2));
@@ -1702,8 +1700,8 @@ Licensed under the MIT license.
 
             $.each(axes, function (_, axis) {
                 var axisOpts = axis.options;
-                axis.show = axisOpts.show == null ? axis.used : axisOpts.show;
-                axis.reserveSpace = axisOpts.reserveSpace == null ? axis.show : axisOpts.reserveSpace;
+                axis.show = axisOpts.show === null ? axis.used : axisOpts.show;
+                axis.reserveSpace = axisOpts.reserveSpace === null ? axis.show : axisOpts.reserveSpace;
                 setRange(axis);
             });
 
@@ -1754,15 +1752,15 @@ Licensed under the MIT license.
 
         function setRange(axis) {
             var opts = axis.options,
-                min = +(opts.min != null ? opts.min : axis.datamin),
-                max = +(opts.max != null ? opts.max : axis.datamax),
+                min = +(opts.min !== null ? opts.min : axis.datamin),
+                max = +(opts.max !== null ? opts.max : axis.datamax),
                 delta = max - min;
 
-            if (delta == 0.0) {
+            if (delta === 0.0) {
                 // degenerate case
-                var widen = max == 0 ? 1 : 0.01;
+                var widen = max === 0 ? 1 : 0.01;
 
-                if (opts.min == null)
+                if (opts.min === null)
                     min -= widen;
                 // always widen max if we couldn't widen min to ensure we
                 // don't fall into min == max which doesn't work
