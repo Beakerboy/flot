@@ -1672,78 +1672,77 @@ Licensed under the MIT license.
         }
 
         function setupGrid() {
-            var i, axes = allAxes(), showGrid = options.grid.show;
+		var i, axes = allAxes(), showGrid = options.grid.show;
+		// Initialize the plot's offset from the edge of the canvas
+		var a
+		for (a in plotOffset) {
+			var margin = options.grid.margin || 0;
+			plotOffset[a] = typeof margin == "number" ? margin : margin[a] || 0;
+		}
 
-            // Initialize the plot's offset from the edge of the canvas
+		executeHooks(hooks.processOffset, [plotOffset]);
 
-            for (var a in plotOffset) {
-                var margin = options.grid.margin || 0;
-                plotOffset[a] = typeof margin == "number" ? margin : margin[a] || 0;
-            }
+		// If the grid is visible, add its border width to the offset
 
-            executeHooks(hooks.processOffset, [plotOffset]);
+		for (a in plotOffset) {
+			if(typeof(options.grid.borderWidth) == "object") {
+				plotOffset[a] += showGrid ? options.grid.borderWidth[a] : 0;
+			}
+			else {
+				plotOffset[a] += showGrid ? options.grid.borderWidth : 0;
+			}
+		}
 
-            // If the grid is visible, add its border width to the offset
+		$.each(axes, function (_, axis) {
+			var axisOpts = axis.options;
+			axis.show = axisOpts.show === null ? axis.used : axisOpts.show;
+			axis.reserveSpace = axisOpts.reserveSpace === null ? axis.show : axisOpts.reserveSpace;
+			setRange(axis);
+		});
 
-            for (var a in plotOffset) {
-                if(typeof(options.grid.borderWidth) == "object") {
-                    plotOffset[a] += showGrid ? options.grid.borderWidth[a] : 0;
-                }
-                else {
-                    plotOffset[a] += showGrid ? options.grid.borderWidth : 0;
-                }
-            }
+		if (showGrid) {
 
-            $.each(axes, function (_, axis) {
-                var axisOpts = axis.options;
-                axis.show = axisOpts.show === null ? axis.used : axisOpts.show;
-                axis.reserveSpace = axisOpts.reserveSpace === null ? axis.show : axisOpts.reserveSpace;
-                setRange(axis);
-            });
+			var allocatedAxes = $.grep(axes, function (axis) {
+				return axis.show || axis.reserveSpace;
+			});
 
-            if (showGrid) {
+			$.each(allocatedAxes, function (_, axis) {
+				// make the ticks
+				setupTickGeneration(axis);
+				setTicks(axis);
+				snapRangeToTicks(axis, axis.ticks);
+				// find labelWidth/Height for axis
+				measureTickLabels(axis);
+			});
 
-                var allocatedAxes = $.grep(axes, function (axis) {
-                    return axis.show || axis.reserveSpace;
-                });
+			// with all dimensions calculated, we can compute the
+			// axis bounding boxes, start from the outside
+			// (reverse order)
+			for (i = allocatedAxes.length - 1; i >= 0; --i)
+				allocateAxisBoxFirstPhase(allocatedAxes[i]);
 
-                $.each(allocatedAxes, function (_, axis) {
-                    // make the ticks
-                    setupTickGeneration(axis);
-                    setTicks(axis);
-                    snapRangeToTicks(axis, axis.ticks);
-                    // find labelWidth/Height for axis
-                    measureTickLabels(axis);
-                });
+			// make sure we've got enough space for things that
+			// might stick out
+			adjustLayoutForThingsStickingOut();
 
-                // with all dimensions calculated, we can compute the
-                // axis bounding boxes, start from the outside
-                // (reverse order)
-                for (i = allocatedAxes.length - 1; i >= 0; --i)
-                    allocateAxisBoxFirstPhase(allocatedAxes[i]);
+			$.each(allocatedAxes, function (_, axis) {
+				allocateAxisBoxSecondPhase(axis);
+			});
+		}
 
-                // make sure we've got enough space for things that
-                // might stick out
-                adjustLayoutForThingsStickingOut();
+		plotWidth = surface.width - plotOffset.left - plotOffset.right;
+		plotHeight = surface.height - plotOffset.bottom - plotOffset.top;
 
-                $.each(allocatedAxes, function (_, axis) {
-                    allocateAxisBoxSecondPhase(axis);
-                });
-            }
+		// now we got the proper plot dimensions, we can compute the scaling
+		$.each(axes, function (_, axis) {
+			setTransformationHelpers(axis);
+		});
 
-            plotWidth = surface.width - plotOffset.left - plotOffset.right;
-            plotHeight = surface.height - plotOffset.bottom - plotOffset.top;
+		if (showGrid) {
+			drawAxisLabels();
+		}
 
-            // now we got the proper plot dimensions, we can compute the scaling
-            $.each(axes, function (_, axis) {
-                setTransformationHelpers(axis);
-            });
-
-            if (showGrid) {
-                drawAxisLabels();
-            }
-
-            insertLegend();
+		insertLegend();
         }
 
         function setRange(axis) {
@@ -2027,7 +2026,7 @@ Licensed under the MIT license.
             }
 
             // auto-reverse as an added bonus
-            if (from != null && to !== null && from > to) {
+            if (from !== null && to !=== null && from > to) {
                 var tmp = from;
                 from = to;
                 to = tmp;
@@ -2072,13 +2071,13 @@ Licensed under the MIT license.
                         yrange = extractRange(m, "y");
 
                     // fill in missing
-                    if (xrange.from == null)
+                    if (xrange.from === null)
                         xrange.from = xrange.axis.min;
-                    if (xrange.to == null)
+                    if (xrange.to === null)
                         xrange.to = xrange.axis.max;
-                    if (yrange.from == null)
+                    if (yrange.from === null)
                         yrange.from = yrange.axis.min;
-                    if (yrange.to == null)
+                    if (yrange.to === null)
                         yrange.to = yrange.axis.max;
 
                     // clip
@@ -2134,7 +2133,7 @@ Licensed under the MIT license.
             for (var j = 0; j < axes.length; ++j) {
                 var axis = axes[j], box = axis.box,
                     t = axis.tickLength, x, y, xoff, yoff;
-                if (!axis.show || axis.ticks.length == 0)
+                if (!axis.show || axis.ticks.length === 0)
                     continue;
 
                 ctx.lineWidth = 1;
@@ -2811,112 +2810,111 @@ Licensed under the MIT license.
 
         function insertLegend() {
 
-            if (options.legend.container !== null) {
-                $(options.legend.container).html("");
-            } else {
-                placeholder.find(".legend").remove();
-            }
+		if (options.legend.container !== null) {
+			$(options.legend.container).html("");
+		} else {
+			placeholder.find(".legend").remove();
+		}
 
-            if (!options.legend.show) {
-                return;
-            }
+		if (!options.legend.show) {
+			return;
+		}
 
-            var fragments = [], entries = [], rowStarted = false,
-                lf = options.legend.labelFormatter, s, label;
+		var fragments = [], entries = [], rowStarted = false;
+                var lf = options.legend.labelFormatter, s, label;
 
-            // Build a list of legend entries, with each having a label and a color
+		// Build a list of legend entries, with each having a label and a color
+		var i
+		for (i = 0; i < series.length; ++i) {
+			s = series[i];
+			if (s.label) {
+				label = lf ? lf(s.label, s) : s.label;
+				if (label) {
+					entries.push({
+						label: label,
+						color: s.color
+					});
+				}
+			}
+		}
 
-            for (var i = 0; i < series.length; ++i) {
-                s = series[i];
-                if (s.label) {
-                    label = lf ? lf(s.label, s) : s.label;
-                    if (label) {
-                        entries.push({
-                            label: label,
-                            color: s.color
-                        });
-                    }
-                }
-            }
+		// Sort the legend using either the default or a custom comparator
 
-            // Sort the legend using either the default or a custom comparator
+		if (options.legend.sorted) {
+			if ($.isFunction(options.legend.sorted)) {
+				entries.sort(options.legend.sorted);
+			} else if (options.legend.sorted == "reverse") {
+				entries.reverse();
+			} else {
+				var ascending = options.legend.sorted != "descending";
+				entries.sort(function(a, b) {
+					return a.label == b.label ? 0 : (
+						(a.label < b.label) != ascending ? 1 : -1   // Logical XOR
+					);
+				});
+			}
+		}
 
-            if (options.legend.sorted) {
-                if ($.isFunction(options.legend.sorted)) {
-                    entries.sort(options.legend.sorted);
-                } else if (options.legend.sorted == "reverse") {
-                	entries.reverse();
-                } else {
-                    var ascending = options.legend.sorted != "descending";
-                    entries.sort(function(a, b) {
-                        return a.label == b.label ? 0 : (
-                            (a.label < b.label) != ascending ? 1 : -1   // Logical XOR
-                        );
-                    });
-                }
-            }
+		// Generate markup for the list of entries, in their final order
+		for (i = 0; i < entries.length; ++i) {
 
-            // Generate markup for the list of entries, in their final order
+			var entry = entries[i];
 
-            for (var i = 0; i < entries.length; ++i) {
+			if (i % options.legend.noColumns === 0) {
+				if (rowStarted)
+					fragments.push('</tr>');
+				fragments.push('<tr>');
+				rowStarted = true;
+			}
 
-                var entry = entries[i];
+			fragments.push(
+				'<td class="legendColorBox"><div style="border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style="width:4px;height:0;border:5px solid ' + entry.color + ';overflow:hidden"></div></div></td>' +
+				'<td class="legendLabel">' + entry.label + '</td>'
+			);
+		}
 
-                if (i % options.legend.noColumns === 0) {
-                    if (rowStarted)
-                        fragments.push('</tr>');
-                    fragments.push('<tr>');
-                    rowStarted = true;
-                }
+		if (rowStarted)
+			fragments.push('</tr>');
 
-                fragments.push(
-                    '<td class="legendColorBox"><div style="border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style="width:4px;height:0;border:5px solid ' + entry.color + ';overflow:hidden"></div></div></td>' +
-                    '<td class="legendLabel">' + entry.label + '</td>'
-                );
-            }
+		if (fragments.length === 0)
+			return;
 
-            if (rowStarted)
-                fragments.push('</tr>');
-
-            if (fragments.length === 0)
-                return;
-
-            var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
-            if (options.legend.container !== null)
-                $(options.legend.container).html(table);
-            else {
-                var pos = "",
-                    p = options.legend.position,
-                    m = options.legend.margin;
-                if (m[0] === null)
-                    m = [m, m];
-                if (p.charAt(0) == "n")
-                    pos += 'top:' + (m[1] + plotOffset.top) + 'px;';
-                else if (p.charAt(0) == "s")
-                    pos += 'bottom:' + (m[1] + plotOffset.bottom) + 'px;';
-                if (p.charAt(1) == "e")
-                    pos += 'right:' + (m[0] + plotOffset.right) + 'px;';
-                else if (p.charAt(1) == "w")
-                    pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
-                var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
-                if (options.legend.backgroundOpacity !== 0.0) {
-                    // put in the transparent background
-                    // separately to avoid blended labels and
-                    // label boxes
-                    var c = options.legend.backgroundColor;
-                    if (c === null) {
-                        c = options.grid.backgroundColor;
-                        if (c && typeof c == "string")
-                            c = $.color.parse(c);
-                        else
-                            c = $.color.extract(legend, 'background-color');
-                        c.a = 1;
-                        c = c.toString();
-                    }
-                    var div = legend.children();
-                    $('<div style="position:absolute;width:' + div.width() + 'px;height:' + div.height() + 'px;' + pos +'background-color:' + c + ';"> </div>').prependTo(legend).css('opacity', options.legend.backgroundOpacity);
-                }
-            }
+		var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
+		if (options.legend.container !== null)
+			$(options.legend.container).html(table);
+		else {
+			var pos = "",
+			    p = options.legend.position,
+			    m = options.legend.margin;
+			if (m[0] === null)
+				m = [m, m];
+			if (p.charAt(0) == "n")
+				pos += 'top:' + (m[1] + plotOffset.top) + 'px;';
+			else if (p.charAt(0) == "s")
+				pos += 'bottom:' + (m[1] + plotOffset.bottom) + 'px;';
+			if (p.charAt(1) == "e")
+				pos += 'right:' + (m[0] + plotOffset.right) + 'px;';
+			else if (p.charAt(1) == "w")
+				pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
+			var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
+			if (options.legend.backgroundOpacity !== 0.0) {
+				// put in the transparent background
+				// separately to avoid blended labels and
+				// label boxes
+				var c = options.legend.backgroundColor;
+				if (c === null) {
+					c = options.grid.backgroundColor;
+					if (c && typeof c == "string")
+						c = $.color.parse(c);
+					else
+						c = $.color.extract(legend, 'background-color');
+					c.a = 1;
+					c = c.toString();
+				}
+				var div = legend.children();
+				$('<div style="position:absolute;width:' + div.width() + 'px;height:' + div.height() + 'px;' + pos +'background-color:' + c + ';"> </div>').prependTo(legend).css('opacity', options.legend.backgroundOpacity);
+			}
+		}
         }
 
 
@@ -2951,33 +2949,34 @@ Licensed under the MIT license.
                     maxx = Number.MAX_VALUE;
                 if (axisy.options.inverseTransform)
                     maxy = Number.MAX_VALUE;
-
+		var x, y;
                 if (s.lines.show || s.points.show) {
-                    for (j = 0; j < points.length; j += ps) {
-                        var x = points[j], y = points[j + 1];
-                        if (x === null)
-                            continue;
+			for (j = 0; j < points.length; j += ps) {
+				x = points[j];
+				y = points[j + 1];
+				if (x === null)
+					continue;
 
-                        // For points and lines, the cursor must be within a
-                        // certain distance to the data point
-                        if (x - mx > maxx || x - mx < -maxx ||
-                            y - my > maxy || y - my < -maxy)
-                            continue;
+				// For points and lines, the cursor must be within a
+				// certain distance to the data point
+				if (x - mx > maxx || x - mx < -maxx ||
+				    y - my > maxy || y - my < -maxy)
+					continue;
 
-                        // We have to calculate distances in pixels, not in
-                        // data units, because the scales of the axes may be different
-                        var dx = Math.abs(axisx.p2c(x) - mouseX),
-                            dy = Math.abs(axisy.p2c(y) - mouseY),
-                            dist = dx * dx + dy * dy; // we save the sqrt
+				// We have to calculate distances in pixels, not in
+				// data units, because the scales of the axes may be different
+				var dx = Math.abs(axisx.p2c(x) - mouseX;
+				var dy = Math.abs(axisy.p2c(y) - mouseY);
+				var dist = dx * dx + dy * dy; // we save the sqrt
 
-                        // use <= to ensure last point takes precedence
-                        // (last generally means on top of)
-                        if (dist < smallestDistance) {
-                            smallestDistance = dist;
-                            item = [i, j / ps];
-                        }
-                    }
-                }
+				// use <= to ensure last point takes precedence
+				// (last generally means on top of)
+				if (dist < smallestDistance) {
+					smallestDistance = dist;
+					item = [i, j / ps];
+				}
+			}
+		}
 
                 if (s.bars.show && !item) { // no other point can be nearby
 
@@ -2997,8 +2996,10 @@ Licensed under the MIT license.
                     barRight = barLeft + s.bars.barWidth;
 
                     for (j = 0; j < points.length; j += ps) {
-                        var x = points[j], y = points[j + 1], b = points[j + 2];
-                        if (x == null)
+                        x = points[j];
+			y = points[j + 1];
+			var b = points[j + 2];
+                        if (x === null)
                             continue;
 
                         // for a bar graph, the cursor must be inside the bar
@@ -3029,7 +3030,7 @@ Licensed under the MIT license.
         function onMouseMove(e) {
             if (options.grid.hoverable)
                 triggerClickHoverEvent("plothover", e,
-                                       function (s) { return s.hoverable != false; });
+                                       function (s) { return s.hoverable !== false; });
         }
 
         function onMouseLeave(e) {
@@ -3040,7 +3041,7 @@ Licensed under the MIT license.
 
         function onClick(e) {
             triggerClickHoverEvent("plotclick", e,
-                                   function (s) { return s.clickable != false; });
+                                   function (s) { return s.clickable !== false; });
         }
 
         // trigger click or hover event (they send the same parameters
@@ -3133,33 +3134,32 @@ Licensed under the MIT license.
         }
 
         function unhighlight(s, point) {
-            if (s == null && point == null) {
-                highlights = [];
-                triggerRedrawOverlay();
-                return;
-            }
+		if (s === null && point === null) {
+			highlights = [];
+			triggerRedrawOverlay();
+			return;
+		}
 
-            if (typeof s == "number")
-                s = series[s];
+		if (typeof s == "number")
+			s = series[s];
 
-            if (typeof point == "number") {
-                var ps = s.datapoints.pointsize;
-                point = s.datapoints.points.slice(ps * point, ps * (point + 1));
-            }
+		if (typeof point == "number") {
+			var ps = s.datapoints.pointsize;
+			point = s.datapoints.points.slice(ps * point, ps * (point + 1));
+		}
 
-            var i = indexOfHighlight(s, point);
-            if (i != -1) {
-                highlights.splice(i, 1);
+		var i = indexOfHighlight(s, point);
+		if (i != -1) {
+			highlights.splice(i, 1);
 
-                triggerRedrawOverlay();
-            }
-        }
+			triggerRedrawOverlay();
+		}
+	}
 
         function indexOfHighlight(s, p) {
             for (var i = 0; i < highlights.length; ++i) {
                 var h = highlights[i];
-                if (h.series == s && h.point[0] == p[0]
-                    && h.point[1] == p[1])
+                if (h.series == s && h.point[0] == p[0] && h.point[1] == p[1])
                     return i;
             }
             return -1;
@@ -3225,9 +3225,9 @@ Licensed under the MIT license.
                     var c = spec.colors[i];
                     if (typeof c != "string") {
                         var co = $.color.parse(defaultColor);
-                        if (c.brightness != null)
+                        if (c.brightness !== null)
                             co = co.scale('rgb', c.brightness);
-                        if (c.opacity != null)
+                        if (c.opacity !== null)
                             co.a *= c.opacity;
                         c = co.toString();
                     }
