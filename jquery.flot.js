@@ -877,16 +877,15 @@ Licensed under the MIT license.
 		// If no x/y axis options were provided, create one of each anyway,
 		// since the rest of the code assumes that they exist.
 
-		var i, axisOptions, axisCount,
-		    fontSize = placeholder.css("font-size"),
-		    fontSizeDefault = fontSize ? +fontSize.replace("px", "") : 13,
-		    fontDefaults = {
-			    style: placeholder.css("font-style"),
-			    size: Math.round(0.8 * fontSizeDefault),
-			    variant: placeholder.css("font-variant"),
-			    weight: placeholder.css("font-weight"),
-			    family: placeholder.css("font-family")
-		    };
+		var i, axisOptions, axisCount, fontSize = placeholder.css("font-size");
+		var fontSizeDefault = fontSize ? +fontSize.replace("px", "") : 13;
+		var fontDefaults = {
+			style: placeholder.css("font-style"),
+			size: Math.round(0.8 * fontSizeDefault),
+			variant: placeholder.css("font-variant"),
+			weight: placeholder.css("font-weight"),
+			family: placeholder.css("font-family")
+		};
 
 		axisCount = options.xaxes.length || 1;
 		for (i = 0; i < axisCount; ++i) {
@@ -1157,7 +1156,7 @@ Licensed under the MIT license.
                 s = series[i];
 
                 // assign colors
-                if (s.color == null) {
+                if (s.color === null) {
                     s.color = colors[colori].toString();
                     ++colori;
                 }
@@ -1309,10 +1308,7 @@ Licensed under the MIT license.
                         // a little bit of line specific stuff that
                         // perhaps shouldn't be here, but lacking
                         // better means...
-                        if (insertSteps && k > 0
-                            && points[k - ps] !== null
-                            && points[k - ps] != points[k]
-                            && points[k - ps + 1] != points[k + 1]) {
+                        if (insertSteps && k > 0 && points[k - ps] !== null && points[k - ps] != points[k] && points[k - ps + 1] != points[k + 1]) {
                             // copy the point to make room for a middle point
                             for (m = 0; m < ps; ++m)
                                 points[k + ps + m] = points[k + m];
@@ -1764,23 +1760,23 @@ Licensed under the MIT license.
                     min -= widen;
                 // always widen max if we couldn't widen min to ensure we
                 // don't fall into min == max which doesn't work
-                if (opts.max == null || opts.min != null)
+                if (opts.max === null || opts.min !== null)
                     max += widen;
             }
             else {
                 // consider autoscaling
                 var margin = opts.autoscaleMargin;
-                if (margin != null) {
-                    if (opts.min == null) {
+                if (margin !== null) {
+                    if (opts.min === null) {
                         min -= delta * margin;
                         // make sure we don't go below zero if all values
                         // are positive
-                        if (min < 0 && axis.datamin != null && axis.datamin >= 0)
+                        if (min < 0 && axis.datamin !== null && axis.datamin >= 0)
                             min = 0;
                     }
-                    if (opts.max == null) {
+                    if (opts.max === null) {
                         max += delta * margin;
-                        if (max > 0 && axis.datamax != null && axis.datamax <= 0)
+                        if (max > 0 && axis.datamax !== null && axis.datamax <= 0)
                             max = 0;
                     }
                 }
@@ -1805,7 +1801,7 @@ Licensed under the MIT license.
                 dec = -Math.floor(Math.log(delta) / Math.LN10),
                 maxDec = opts.tickDecimals;
 
-            if (maxDec != null && dec > maxDec) {
+            if (maxDec !== null && dec > maxDec) {
                 dec = maxDec;
             }
 
@@ -1818,7 +1814,7 @@ Licensed under the MIT license.
             } else if (norm < 3) {
                 size = 2;
                 // special case for 2.5, requires an extra decimal
-                if (norm > 2.25 && (maxDec == null || dec + 1 <= maxDec)) {
+                if (norm > 2.25 && (maxDec === null || dec + 1 <= maxDec)) {
                     size = 2.5;
                     ++dec;
                 }
@@ -1830,12 +1826,12 @@ Licensed under the MIT license.
 
             size *= magn;
 
-            if (opts.minTickSize != null && size < opts.minTickSize) {
+            if (opts.minTickSize !== null && size < opts.minTickSize) {
                 size = opts.minTickSize;
             }
 
             axis.delta = delta;
-            axis.tickDecimals = Math.max(0, maxDec != null ? maxDec : dec);
+            axis.tickDecimals = Math.max(0, maxDec !== null ? maxDec : dec);
             axis.tickSize = opts.tickSize || size;
 
             // Time mode was moved to a plug-in in 0.8, and since so many people use it
@@ -1875,7 +1871,7 @@ Licensed under the MIT license.
 					// If tickDecimals was specified, ensure that we have exactly that
 					// much precision; otherwise default to the value's own precision.
 
-					if (axis.tickDecimals != null) {
+					if (axis.tickDecimals !== null) {
 						var decimal = formatted.indexOf(".");
 						var precision = decimal == -1 ? 0 : formatted.length - decimal - 1;
 						if (precision < axis.tickDecimals) {
@@ -1890,15 +1886,15 @@ Licensed under the MIT license.
             if ($.isFunction(opts.tickFormatter))
                 axis.tickFormatter = function (v, axis) { return "" + opts.tickFormatter(v, axis); };
 
-            if (opts.alignTicksWithAxis != null) {
+            if (opts.alignTicksWithAxis !== null) {
                 var otherAxis = (axis.direction == "x" ? xaxes : yaxes)[opts.alignTicksWithAxis - 1];
                 if (otherAxis && otherAxis.used && otherAxis != axis) {
                     // consider snapping min/max to outermost nice ticks
                     var niceTicks = axis.tickGenerator(axis);
                     if (niceTicks.length > 0) {
-                        if (opts.min == null)
+                        if (opts.min === null)
                             axis.min = Math.min(axis.min, niceTicks[0]);
-                        if (opts.max == null && niceTicks.length > 1)
+                        if (opts.max === null && niceTicks.length > 1)
                             axis.max = Math.max(axis.max, niceTicks[niceTicks.length - 1]);
                     }
 
@@ -1915,7 +1911,7 @@ Licensed under the MIT license.
 
                     // we might need an extra decimal since forced
                     // ticks don't necessarily fit naturally
-                    if (!axis.mode && opts.tickDecimals == null) {
+                    if (!axis.mode && opts.tickDecimals === null) {
                         var extraDec = Math.max(0, -Math.floor(Math.log(axis.delta) / Math.LN10) + 1),
                             ts = axis.tickGenerator(axis);
 
@@ -1931,7 +1927,7 @@ Licensed under the MIT license.
 
         function setTicks(axis) {
             var oticks = axis.options.ticks, ticks = [];
-            if (oticks == null || (typeof oticks == "number" && oticks > 0))
+            if (oticks === null || (typeof oticks == "number" && oticks > 0))
                 ticks = axis.tickGenerator(axis);
             else if (oticks) {
                 if ($.isFunction(oticks))
@@ -1954,7 +1950,7 @@ Licensed under the MIT license.
                 }
                 else
                     v = +t;
-                if (label == null)
+                if (label === null)
                     label = axis.tickFormatter(v, axis);
                 if (!isNaN(v))
                     axis.ticks.push({ v: v, label: label });
@@ -1964,9 +1960,9 @@ Licensed under the MIT license.
         function snapRangeToTicks(axis, ticks) {
             if (axis.options.autoscaleMargin && ticks.length > 0) {
                 // snap to ticks
-                if (axis.options.min == null)
+                if (axis.options.min === null)
                     axis.min = Math.min(axis.min, ticks[0].v);
-                if (axis.options.max == null && ticks.length > 1)
+                if (axis.options.max === null && ticks.length > 1)
                     axis.max = Math.max(axis.max, ticks[ticks.length - 1].v);
             }
         }
@@ -2031,7 +2027,7 @@ Licensed under the MIT license.
             }
 
             // auto-reverse as an added bonus
-            if (from != null && to != null && from > to) {
+            if (from != null && to !== null && from > to) {
                 var tmp = from;
                 from = to;
                 to = tmp;
