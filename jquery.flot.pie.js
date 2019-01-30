@@ -225,8 +225,7 @@ More detail and specific examples can be found in the included HTML file.
 				var value = data[i].data[0][1];
 				if (numCombined < 2 || value / total > options.series.pie.combine.threshold) {
 					newdata.push(
-						$.extend(data[i], {     /* extend to allow keeping all other original data values
-						                           and using them e.g. in labelFormatter. */
+						$.extend(data[i], {     /* extend to allow keeping all other original data valuesand using them e.g. in labelFormatter. */
 							data: [[1, value]],
 							color: data[i].color,
 							label: data[i].label,
@@ -321,7 +320,7 @@ More detail and specific examples can be found in the included HTML file.
 				if (options.series.pie.tilt <= 0.8) {
 					drawShadow();
 				}
-			} while (!drawPie() && attempts < REDRAW_ATTEMPTS)
+			} while (!drawPie() && attempts < REDRAW_ATTEMPTS);
 
 			if (attempts >= REDRAW_ATTEMPTS) {
 				clear();
@@ -390,7 +389,8 @@ More detail and specific examples can be found in the included HTML file.
 
 				ctx.save();
 				var currentAngle = startAngle;
-				for (var i = 0; i < slices.length; ++i) {
+				var i;
+				for (i = 0; i < slices.length; ++i) {
 					slices[i].startAngle = currentAngle;
 					drawSlice(slices[i].angle, slices[i].color, true);
 				}
@@ -402,7 +402,7 @@ More detail and specific examples can be found in the included HTML file.
 					ctx.save();
 					ctx.lineWidth = options.series.pie.stroke.width;
 					currentAngle = startAngle;
-					for (var i = 0; i < slices.length; ++i) {
+					for (i = 0; i < slices.length; ++i) {
 						drawSlice(slices[i].angle, options.series.pie.stroke.color, false);
 					}
 					ctx.restore();
@@ -470,7 +470,7 @@ More detail and specific examples can be found in the included HTML file.
 
 					function drawLabel(slice, startAngle, index) {
 
-						if (slice.data[0][1] == 0) {
+						if (slice.data[0][1] === 0) {
 							return true;
 						}
 
@@ -508,13 +508,13 @@ More detail and specific examples can be found in the included HTML file.
 							return false;
 						}
 
-						if (options.series.pie.label.background.opacity != 0) {
+						if (options.series.pie.label.background.opacity !== 0) {
 
 							// put in the transparent background separately to avoid blended labels and label boxes
 
 							var c = options.series.pie.label.background.color;
 
-							if (c == null) {
+							if (c === null) {
 								c = slice.color;
 							}
 
@@ -565,9 +565,7 @@ More detail and specific examples can be found in the included HTML file.
 
 		function isPointInPoly(poly, pt) {
 			for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-				((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1]< poly[i][1]))
-				&& (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0])
-				&& (c = !c);
+				((poly[i][1] <= pt[1] && pt[1] < poly[j][1]) || (poly[j][1] <= pt[1] && pt[1]< poly[i][1])) && (pt[0] < (poly[j][0] - poly[i][0]) * (pt[1] - poly[i][1]) / (poly[j][1] - poly[i][1]) + poly[i][0]) && (c = !c);
 			return c;
 		}
 
@@ -698,7 +696,7 @@ More detail and specific examples can be found in the included HTML file.
 		}
 
 		function unhighlight(s) {
-			if (s == null) {
+			if (s === null) {
 				highlights = [];
 				plot.triggerRedrawOverlay();
 			}
