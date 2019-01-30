@@ -804,12 +804,12 @@ Licensed under the MIT license.
             highlights = [];
             plot = null;
         };
-        plot.resize = function () {
-		var width = placeholder.width();
-        	var height = placeholder.height();
-		surface.resize(width, height);
-		overlay.resize(width, height);
-        };
+	    plot.resize = function () {
+		    var width = placeholder.width();
+		    var height = placeholder.height();
+		    surface.resize(width, height);
+		    overlay.resize(width, height);
+	    };
 
         // public attributes
         plot.hooks = hooks;
@@ -863,9 +863,9 @@ Licensed under the MIT license.
 		if (options.yaxis.color === null)
 			options.yaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
 		if (options.xaxis.tickColor === null) // grid.tickColor for back-compatibility
-		    options.xaxis.tickColor = options.grid.tickColor || options.xaxis.color;
+			options.xaxis.tickColor = options.grid.tickColor || options.xaxis.color;
 		if (options.yaxis.tickColor === null) // grid.tickColor for back-compatibility
-		    options.yaxis.tickColor = options.grid.tickColor || options.yaxis.color;
+			options.yaxis.tickColor = options.grid.tickColor || options.yaxis.color;
 		if (options.grid.borderColor === null)
 			options.grid.borderColor = options.grid.color;
 		if (options.grid.tickColor === null)
@@ -1674,7 +1674,7 @@ Licensed under the MIT license.
         function setupGrid() {
 		var i, axes = allAxes(), showGrid = options.grid.show;
 		// Initialize the plot's offset from the edge of the canvas
-		var a
+		var a;
 		for (a in plotOffset) {
 			var margin = options.grid.margin || 0;
 			plotOffset[a] = typeof margin == "number" ? margin : margin[a] || 0;
@@ -2026,7 +2026,7 @@ Licensed under the MIT license.
             }
 
             // auto-reverse as an added bonus
-            if (from !== null && to !=== null && from > to) {
+            if (from !== null && to !== null && from > to) {
                 var tmp = from;
                 from = to;
                 to = tmp;
