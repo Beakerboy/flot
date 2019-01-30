@@ -93,9 +93,11 @@ browser, but needs to redraw with canvas text when exporting as an image.
 										updateStyles = false;
 									}
 
-									for (var i = 0, position; position = positions[i]; i++) {
+									for (var i = 0, position; positions[i]; i++) {
+										position = positions[i];
 										if (position.active) {
-											for (var j = 0, line; line = position.lines[j]; j++) {
+											for (var j = 0, line; position.lines[j]; j++) {
+												lime = position.lines[j];
 												context.fillText(lines[j].text, line[0], line[1]);
 											}
 										} else {
@@ -300,8 +302,9 @@ browser, but needs to redraw with canvas text when exporting as an image.
 
 			// Determine whether this text already exists at this position.
 			// If so, mark it for inclusion in the next render pass.
-
-			for (var i = 0, position; position = positions[i]; i++) {
+                        var i;
+			for (i = 0, position; positions[i]; i++) {
+				position = positions[i];
 				if (position.x == x && position.y == y) {
 					position.active = true;
 					return;
@@ -322,7 +325,8 @@ browser, but needs to redraw with canvas text when exporting as an image.
 			// Fill in the x & y positions of each line, adjusting them
 			// individually for horizontal alignment.
 
-			for (var i = 0, line; line = lines[i]; i++) {
+			for (i = 0, line; lines[i]; i++) {
+				line = lines[i];
 				if (halign == "center") {
 					position.lines.push([Math.round(x - line.width / 2), y]);
 				} else if (halign == "right") {
