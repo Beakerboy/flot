@@ -6,7 +6,7 @@
 		"test": "make test"
 	},
 	"devDependencies": {
-		"jshint": "1.1.0"
+		"jshint": "1.1.0",
 		"karma": "~1.0.0"
 	}
 }
